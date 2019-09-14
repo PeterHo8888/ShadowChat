@@ -54,6 +54,7 @@ public class ShadowProcessing {
                         StyleConstants.setIcon(gui.getStyle(), icon);
                     }
                     gui.insert(list[j], "icon");
+                    gui.insert(" ", "reg");
                 }
             if (!isIcon) {
                 gui.insert(list[j], "reg");

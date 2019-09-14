@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -19,6 +20,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.SimpleAttributeSet;
@@ -64,17 +66,17 @@ public class ShadowGui extends JFrame implements ActionListener {
             System.out.println("emoticons hashtable already created.");
             return;
         }
-        
+
         emoticons = new Hashtable<String, ImageIcon>();
 
-        File folder = new File("images");    // normal
+        File folder = new File("images"); // normal
         if (!folder.exists())
             folder = new File("src/images"); // eclipse
         if (!folder.exists()) {
             System.out.println("Could not find images/");
             return;
         }
-        
+
         File[] listOfFiles = folder.listFiles();
 
         for (File f : listOfFiles) {
@@ -135,7 +137,7 @@ public class ShadowGui extends JFrame implements ActionListener {
 
         Style def = StyleContext.getDefaultStyleContext().getStyle("default");
 
-        Style regular = doc.addStyle("regular", def);
+        Style regular = doc.addStyle("reg", def);
         StyleConstants.setFontFamily(def, "Courier New");
 
         s = doc.addStyle("italic", regular);
@@ -200,6 +202,13 @@ public class ShadowGui extends JFrame implements ActionListener {
 
         setVisible(true);
         this.tf.requestFocus();
+        
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                showExitMessage();
+            }
+        });
     }
 
     public void actionPerformed(ActionEvent e)
@@ -218,21 +227,27 @@ public class ShadowGui extends JFrame implements ActionListener {
             }
         }
         if (e.getSource() == this.mntmExit) {
-            JPanel panel = new JPanel();
-            JLabel label = new JLabel("Are you sure you want to quit?");
-            String[] options = { "OK", "CANCEL" };
-            panel.add(label);
-            int result = JOptionPane.showOptionDialog(null, panel, "Goodbye...",
-                    -1, 3, null, options, options[0]);
-            if (result == 0) {
-                System.exit(0);
-            }
+            showExitMessage();
         }
         if (e.getSource() == this.mntmAbout) {
             (new AboutDialog(this, "About", true)).setVisible(true);
         }
         if (e.getSource() == this.mntmHelp) {
             (new HelpDialog(this, "Help", true)).setVisible(true);
+        }
+    }
+    
+    private void showExitMessage()
+    {
+        JPanel panel = new JPanel();
+        JLabel label = new JLabel("Are you sure you want to quit?");
+        String[] options = { "OK", "CANCEL" };
+        panel.add(label);
+        int result = JOptionPane.showOptionDialog(null, panel, "Goodbye...",
+                -1, 3, null, options, options[0]);
+        if (result == 0) {
+            ShadowServer.send("!exit");
+            System.exit(0);
         }
     }
 
@@ -249,9 +264,20 @@ public class ShadowGui extends JFrame implements ActionListener {
     protected void insert(String text, String type)
     {
         try {
-            doc.insertString(doc.getLength(), text, doc.getStyle(type));
-            ta.select(doc.getLength(), doc.getLength());  // scroll to bottom
+            if (type.equals("reg")) {
+                // Java 7 broke this bad
+                // https://stackoverflow.com/questions/8666727/
+                for (int i = 0; i < text.length(); i++) {
+                    doc.insertString(doc.getLength(),
+                            text.substring(i, i + 1),
+                            // Change attribute every other char
+                            i % 2 == 0 ? null : doc.getStyle(type));
+                }
+            } else {
+                doc.insertString(doc.getLength(), text, doc.getStyle(type));    
+            }
             // Sometimes doc.insertString doesn't scroll to bottom by itself...
+            ta.select(doc.getLength(), doc.getLength()); // scroll to bottom
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
