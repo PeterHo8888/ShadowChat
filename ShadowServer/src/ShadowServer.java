@@ -9,16 +9,12 @@ public class ShadowServer {
 
     private final int PORT = 20000;
     
-    protected static ArrayList<ServerThread>  serverThreads;
-    
     protected static HashMap<User, ServerThread> map;
 
     ServerSocket ss;
 
     public ShadowServer()
     {
-        
-        serverThreads = new ArrayList<ServerThread>();
         map = new HashMap<User, ServerThread>();
 
         System.out.print("ShadowChat Server v.01b\n\n");
@@ -29,7 +25,7 @@ public class ShadowServer {
         
         try {
             System.out.print("Initializing socket...\n");
-            this.ss = new ServerSocket(20000);
+            this.ss = new ServerSocket(PORT);
             System.out.print("Socket opened on port 20000\n");
 
             while (true) {
