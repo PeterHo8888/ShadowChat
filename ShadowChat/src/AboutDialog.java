@@ -38,6 +38,8 @@ public class AboutDialog extends JDialog implements ActionListener {
         text.append("- Cleanup and refactoring\n");
         text.append("- Replace bad connected list code\n");
         text.append("- Replace bad networking code\n");
+        text.append("- Dynamic emoticons\n");
+        text.append("- Fixed JTextPane scrolling and word wrap problems\n\n");
         
         text.append("v0.1c - 6/12/2016\n");
         text.append("- Fixed glitchy connected list\n\n");
