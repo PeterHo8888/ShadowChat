@@ -4,6 +4,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.net.URL;
 import java.util.Hashtable;
 import javax.swing.ImageIcon;
@@ -31,10 +32,10 @@ public class ShadowGui extends JFrame implements ActionListener {
     public static String      version          = "0.2.0";
 
     // GUI Components
-    private JTextField         tf;  // typing
-    private JTextArea          ta;  // connected
-    private JTextPane          tp;  // messages
-    private StyledDocument     doc;
+    private JTextField     tf; // typing
+    private JTextArea      ta; // connected
+    private JTextPane      tp; // messages
+    private StyledDocument doc;
 
     // Menus
     private JMenuBar  menuBar;
@@ -45,13 +46,10 @@ public class ShadowGui extends JFrame implements ActionListener {
     private JMenuItem mntmHelp;
 
     // Control
-    private static Style        s;
+    private static Style       s;
     public static ShadowServer ss;
 
     // Emoticons
-    public static final int             EMOTE_LENGTH = 16;
-    public String[]                     emotes;
-    public ImageIcon[]                  icons;
     public Hashtable<String, ImageIcon> emoticons;
 
     public static void main(String[] args)
@@ -66,47 +64,24 @@ public class ShadowGui extends JFrame implements ActionListener {
             System.out.println("emoticons hashtable already created.");
             return;
         }
+        
         emoticons = new Hashtable<String, ImageIcon>();
-        emotes = new String[EMOTE_LENGTH];
-        icons = new ImageIcon[EMOTE_LENGTH];
 
-        icons[0] = createImageIcon("images/kappa.png", "kappa");
-        icons[1] = createImageIcon("images/osama.png", "osama");
-        icons[2] = createImageIcon("images/bush.png", "bush");
-        icons[3] = createImageIcon("images/doge.png", "kappa");
-        icons[4] = createImageIcon("images/hitler.png", "kappa");
-        icons[5] = createImageIcon("images/hussein.png", "kappa");
-        icons[6] = createImageIcon("images/lmao.png", "kappa");
-        icons[7] = createImageIcon("images/obama.png", "kappa");
-        icons[8] = createImageIcon("images/paulblart.png", "kappa");
-        icons[9] = createImageIcon("images/putin.png", "kappa");
-        icons[10] = createImageIcon("images/reagan.png", "kappa");
-        icons[11] = createImageIcon("images/romney.png", "kappa");
-        icons[12] = createImageIcon("images/ronpaul.png", "kappa");
-        icons[13] = createImageIcon("images/sanders.png", "kappa");
-        icons[14] = createImageIcon("images/truman.png", "kappa");
-        icons[15] = createImageIcon("images/illuminati.png", "kappa");
+        File folder = new File("images");    // normal
+        if (!folder.exists())
+            folder = new File("src/images"); // eclipse
+        if (!folder.exists()) {
+            System.out.println("Could not find images/");
+            return;
+        }
+        
+        File[] listOfFiles = folder.listFiles();
 
-        // TODO: create these from filename
-        emotes[0] = "kappa";
-        emotes[1] = "osama";
-        emotes[2] = "bush";
-        emotes[3] = "doge";
-        emotes[4] = "hitler";
-        emotes[5] = "saddam";
-        emotes[6] = "lmao";
-        emotes[7] = "obama";
-        emotes[8] = "paulblart";
-        emotes[9] = "putin";
-        emotes[10] = "reagan";
-        emotes[11] = "tricky";
-        emotes[12] = "ronpaul";
-        emotes[13] = "sanders";
-        emotes[14] = "truman";
-        emotes[15] = "iloominarty";
-
-        for (int i = 0; i < emotes.length; i++) {
-            emoticons.put(emotes[i], icons[i]);
+        for (File f : listOfFiles) {
+            if (f.isFile()) {
+                emoticons.put(f.getName().split(".png")[0],
+                        createImageIcon("images/" + f.getName(), ""));
+            }
         }
     }
 
@@ -274,28 +249,29 @@ public class ShadowGui extends JFrame implements ActionListener {
     protected void insert(String text, String type)
     {
         try {
-            doc.insertString(doc.getLength(), text,
-                    doc.getStyle(type));
+            doc.insertString(doc.getLength(), text, doc.getStyle(type));
+            ta.select(doc.getLength(), doc.getLength());  // scroll to bottom
+            // Sometimes doc.insertString doesn't scroll to bottom by itself...
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
     }
-    
+
     protected void setConnectedText(String str)
     {
         ta.setText(str);
     }
-    
+
     protected void appendConnectedText(String str)
     {
         ta.append(str);
     }
-    
+
     protected String getConnectedText()
     {
         return ta.getText();
     }
-    
+
     protected Style getStyle()
     {
         return s;

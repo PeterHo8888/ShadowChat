@@ -25,7 +25,6 @@ public class ShadowProcessing {
 
     public void doAction(String str)
     {
-        // TODO: fix this up badly
         if (str.equals("!name start")) {
             gui.setConnectedText("");
         } else if (str.startsWith("!name")) {
@@ -46,20 +45,16 @@ public class ShadowProcessing {
             return;
 
         for (int j = 0; j < list.length; j++) {
-            for (int i = 0; i < ShadowGui.EMOTE_LENGTH; i++) {
                 isIcon = false;
-                if (list[j].equals(gui.emotes[i])) {
+                if (gui.emoticons.containsKey(list[j])) {
                     isIcon = true;
                     ImageIcon icon = (ImageIcon) gui.emoticons
-                            .get(gui.emotes[i]);
+                            .get(list[j]);
                     if (icon != null) {
                         StyleConstants.setIcon(gui.getStyle(), icon);
                     }
-                    gui.insert(gui.emotes[i], "icon");
-                    break;
+                    gui.insert(list[j], "icon");
                 }
-            }
-
             if (!isIcon) {
                 gui.insert(list[j], "reg");
             }
