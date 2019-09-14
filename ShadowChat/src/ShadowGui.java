@@ -35,7 +35,6 @@ public class ShadowGui extends JFrame implements ActionListener {
     private JTextArea          ta;  // connected
     private JTextPane          tp;  // messages
     private StyledDocument     doc;
-    private SimpleAttributeSet keyWord;
 
     // Menus
     private JMenuBar  menuBar;

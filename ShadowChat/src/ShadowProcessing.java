@@ -1,5 +1,4 @@
 import javax.swing.ImageIcon;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.StyleConstants;
 
 public class ShadowProcessing {

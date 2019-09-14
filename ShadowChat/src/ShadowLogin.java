@@ -22,9 +22,4 @@ public class ShadowLogin {
             System.out.println("Invalid input");
         }
     }
-
-    private String pad(String temp_key)
-    {
-        return String.format("%1$-16s", new Object[] { temp_key });
-    }
 }
