@@ -34,7 +34,6 @@ public class ServerThread extends Thread {
                 String str = this.br.readLine();
                 if (str.equals("!exit")) {
                     output("A client requests to disconnect.\n");
-                    ShadowServer.echoAll(String.valueOf(str) + user.getID());
                     break;
                 }
                 if (str.startsWith("!")) {
@@ -43,14 +42,14 @@ public class ServerThread extends Thread {
                 }
                 ShadowServer.echoAll(str);
             }
-
-            output("A client has disconnected.\n");
         } catch (Exception e) {
             // This is basically them leaving
             System.out.println("Client " + user.getID() + " disconnected unexpectedly");
-            ShadowServer.map.remove(user);
-            sendConnectedList();
         }
+
+        output("A client has disconnected.\n");
+        ShadowServer.map.remove(user);
+        sendConnectedList();
     }
 
     public void doAction(String str)
