@@ -15,9 +15,9 @@ public class ShadowServer {
         Scanner scanner = new Scanner(System.in);
         try {
             s = new Socket(login.server, login.port);
+            send("!name " + login.name);
             sl = new ShadowListener(s, gui);
             sl.start();
-            send("!name " + login.name);
             while (true) {
                 send(scanner.nextLine());
             }

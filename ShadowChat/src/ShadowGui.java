@@ -237,10 +237,10 @@ public class ShadowGui extends JFrame implements ActionListener {
             this.tf.setText("");
             if (!text.startsWith("!exit") && !text.startsWith("!name")
                     && !text.startsWith("!connected")) {
-                ss.send(
+                ShadowServer.send(
                         String.valueOf(ShadowServer.login.name) + ": " + text);
             } else {
-                ss.send(text);
+                ShadowServer.send(text);
             }
         }
         if (e.getSource() == this.mntmExit) {
