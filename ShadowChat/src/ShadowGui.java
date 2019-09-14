@@ -28,7 +28,7 @@ import javax.swing.text.StyledDocument;
 
 public class ShadowGui extends JFrame implements ActionListener {
     private static final long serialVersionUID = -3555101439158612228L;
-    public static String      version          = ".01c";
+    public static String      version          = "0.2.0";
 
     // GUI Components
     private JTextField         tf;  // typing

@@ -35,7 +35,9 @@ public class AboutDialog extends JDialog implements ActionListener {
         text.append("Changelog\n\n");
 
         text.append("0.2.0 - 9/13/2019\n");
-        text.append("- Cleanup and refactoring\n\n");
+        text.append("- Cleanup and refactoring\n");
+        text.append("- Replace bad connected list code\n");
+        text.append("- Replace bad networking code\n");
         
         text.append("v0.1c - 6/12/2016\n");
         text.append("- Fixed glitchy connected list\n\n");

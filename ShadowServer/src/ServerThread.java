@@ -46,10 +46,11 @@ public class ServerThread extends Thread {
 
             output("A client has disconnected.\n");
         } catch (Exception e) {
-
-            e.printStackTrace();
+            // This is basically them leaving
+            System.out.println("Client " + user.getID() + " disconnected unexpectedly");
+            ShadowServer.map.remove(user);
+            sendConnectedList();
         }
-        ShadowServer.map.remove(user);
     }
 
     public void doAction(String str)
@@ -58,13 +59,18 @@ public class ServerThread extends Thread {
             String[] split = str.split("!name ");
             String name = split[1];
             output("id " + user.getID() + " now has name " + name + ".\n");
-            ShadowServer.echoAll("!name " + user.getID() + " " + name);
             user.setName(name);
+            sendConnectedList();
         } else if (str.startsWith("!connected")) {
-            echo("!name start");
-            for (Map.Entry<User, ServerThread> entry : ShadowServer.map.entrySet()) {
-                echo("!name " + entry.getKey().getID() + " " + entry.getKey().getName());
-            }
+            sendConnectedList();  // !connected should not happen anymore
+        }
+    }
+    
+    public void sendConnectedList()
+    {
+        ShadowServer.echoAll("!name start");
+        for (Map.Entry<User, ServerThread> entry : ShadowServer.map.entrySet()) {
+            ShadowServer.echoAll("!name " + entry.getKey().getID() + " " + entry.getKey().getName());
         }
     }
 

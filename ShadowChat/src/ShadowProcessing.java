@@ -27,27 +27,14 @@ public class ShadowProcessing {
     public void doAction(String str)
     {
         // TODO: fix this up badly
-        if (str.startsWith("!name") && !str.startsWith("!name start")
-                && !str.contains("!disconnected")) {
-
+        if (str.equals("!name start")) {
+            gui.setConnectedText("");
+        } else if (str.startsWith("!name")) {
             String[] split = str.split("\\s+");
             int id = Integer.parseInt(split[1]);
             String[] temp = str.split("!name " + id + " ");
             String name = temp[1];
-            String connectedText = gui.getConnectedText();
-            if (!connectedText
-                    .contains(String.valueOf(Integer.toString(id)) + ". ")
-                    && !name.contains("!removed"))
-                gui.appendConnectedText(String.valueOf(id) + ". " + name + "\n");
-            if (name.contains("!removed")) {
-                String[] lines = connectedText.split("\\n");
-                for (int x = 0; x < lines.length; ++x) {
-                    if (lines[x].contains(
-                            String.valueOf(Integer.toString(id)) + ". ")) {
-                        gui.setConnectedText("");
-                    }
-                }
-            }
+            gui.appendConnectedText(String.valueOf(id) + ". " + name + "\n");
         }
     }
 
